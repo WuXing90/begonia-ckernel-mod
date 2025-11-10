@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+export DEFCONFIG="$PWD/arch/arm64/configs/begonia_user_defconfig"
+
+echo '# CONFIG_KSU_SUSFS is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_SUS_PATH is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_SUS_MOUNT is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_AUTO_ADD_SUS_KSU_DEFAULT_MOUNT is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_AUTO_ADD_SUS_BIND_MOUNT is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_SUS_KSTAT is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_TRY_UMOUNT is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_AUTO_ADD_TRY_UMOUNT_FOR_BIND_MOUNT is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_SPOOF_UNAME is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_ENABLE_LOG is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_OPEN_REDIRECT is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_SUS_SU is not set' >> $DEFCONFIG
+echo '# CONFIG_KSU_SUSFS_SUS_MAP is not set' >> $DEFCONFIG

@@ -2,7 +2,8 @@
   "name": "Just My Gaming Chair",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
   "features":{
-    "ghcr.io/devcontainers-extra/features/act:1": {}
+    "ghcr.io/devcontainers-extra/features/act:1": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
   "customizations": {
     "vscode": {
