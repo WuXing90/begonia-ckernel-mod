@@ -249,7 +249,7 @@ jobs:
 
       - name: Pack kernel source for release
         if: ${{ github.event.inputs.generate_release != 'none' }}
-        run: 'zip -r -9 sukisu-begonia-power-kernel-mod-src.zip ${{ env.KERNEL_FOLDER }}'
+        run: 'zip -r -9 sukisu-begonia-power-kernel-mod-src.zip ${{ env.KERNEL_FOLDER }} -x "${{ env.KERNEL_FOLDER }}/out/**\*" "${{ env.KERNEL_FOLDER }}/toolchain/**\*"'
 
       - name: Create release
         if: ${{ github.event.inputs.generate_release != 'none' }}
