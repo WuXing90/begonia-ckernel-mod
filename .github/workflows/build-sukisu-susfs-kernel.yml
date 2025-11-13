@@ -123,7 +123,8 @@ jobs:
             set -e
             cd ${{ env.KERNEL_FOLDER }}
 
-            sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' $DEFCONFIG
+            sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' ${{ env.DEFCONFIG }}
+            sed -ri 's/^(CONFIG_KPM=.*|# CONFIG_KPM is not set)/CONFIG_KPM=n/' ${{ env.DEFCONFIG }}
 
             if  ${{ github.event.inputs.mock_build == 'false' }}; then
               ../kernel-scripts/build.sh -b
@@ -142,7 +143,7 @@ jobs:
             set -e
             cd ${{ env.KERNEL_FOLDER }}
 
-            sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' $DEFCONFIG
+            sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' ${{ env.DEFCONFIG }}
 
             if  ${{ github.event.inputs.mock_build == 'false' }}; then
               ../kernel-scripts/build.sh -b
@@ -161,8 +162,8 @@ jobs:
             set -e
             cd ${{ env.KERNEL_FOLDER }}
 
-            sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' $DEFCONFIG
-            sed -ri 's/^(CONFIG_KPM=.*|# CONFIG_KPM is not set)/CONFIG_KPM=y/' $DEFCONFIG
+            sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' ${{ env.DEFCONFIG }}
+            sed -ri 's/^(CONFIG_KPM=.*|# CONFIG_KPM is not set)/CONFIG_KPM=y/' ${{ env.DEFCONFIG }}
 
             if  ${{ github.event.inputs.mock_build == 'false' }}; then
               ../kernel-scripts/build.sh -b
@@ -181,7 +182,7 @@ jobs:
             set -e
             cd ${{ env.KERNEL_FOLDER }}
 
-            sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' $DEFCONFIG
+            sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' ${{ env.DEFCONFIG }}
 
             if  ${{ github.event.inputs.mock_build == 'false' }}; then
               ../kernel-scripts/build.sh -b
