@@ -6,14 +6,14 @@ on:
       mock_build:
         type: boolean
         default: false
-        description: Do not buld kernel. Useful for testing if workflow works without taking too long
+        description: Do not build kernel. Useful for testing if workflow works without taking too long
       upload_artifact:
         type: boolean
         default: false
-        description: Upload built kernel binary
+        description: Upload built AnyKernel3 folder
       generate_release:
         type: choice
-        description: New tag?
+        description: Generate release?
         default: none
         options:
           - none
@@ -57,14 +57,17 @@ jobs:
         run: |
             cd ${{ env.KERNEL_FOLDER }}
 
-            (sudo apt upgrade && apt install -y git device-tree-compiler lz4 xz-utils zlib1g-dev openjdk-17-jdk gcc g++ python3 python-is-python3 p7zip-full android-sdk-libsparse-utils erofs-utils \
+            (sudo apt update
+             sudo apt install -y git device-tree-compiler lz4 xz-utils zlib1g-dev openjdk-17-jdk gcc g++ python3 python-is-python3 p7zip-full android-sdk-libsparse-utils erofs-utils \
              default-jdk gnupg flex bison gperf build-essential zip curl libc6-dev libncurses-dev libx11-dev libreadline-dev libgl1 libgl1-mesa-dev \
-             python3 make sudo gcc g++ bc grep tofrodos python3-markdown libxml2-utils xsltproc zlib1g-dev python-is-python3 libc6-dev libtinfo6 \
-             make repo cpio kmod openssl libelf-dev pahole libssl-dev libarchive-tools zstd rsync --fix-missing) &
+             python3 make gcc g++ bc grep tofrodos python3-markdown libxml2-utils xsltproc zlib1g-dev python-is-python3 libc6-dev libtinfo6 \
+             make repo cpio kmod openssl libelf-dev pahole libssl-dev libarchive-tools zstd --fix-missing) &
 
-            (mkdir -p "toolchain" && cd "toolchain"
-            curl -LO "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
-            chmod +x antman && ./antman -S) &
+            if  ${{ github.event.inputs.mock-build == 'false' }}; then
+              (mkdir -p "toolchain" && cd "toolchain"
+              curl -LO "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
+              chmod +x antman && ./antman -S) &
+            fi
 
             ../ext-scripts/sukisu-setup.sh ${{ env.SUKISU_BRANCH }} &
 
@@ -95,16 +98,18 @@ jobs:
 
           patch -p1 < ../patches/ksu-hook-min/ksu-hook-min-1.6.patch
 
-          # temporary fix SukiSU compile issues on susfs-main-branch
-          patch -p1 < ../patches/other-patches/ssu-susfs-main-fix-678c00.patch
-
           # integrate susfs
           cp -r ../patches/susfs-backport/thesillyok-susfs-1.5.12/fs/* fs/
           cp -r ../patches/susfs-backport/thesillyok-susfs-1.5.12/fs/* include/linux/
           patch -p1 < ../patches/susfs-backport/thesillyok-susfs-1.5.12/thesillyok-susfs-1.5.12-mod.patch
 
+          (
+          cd KernelSU
+          # temporary fix SukiSU compile issues on susfs-main-branch
+          patch -p1 < ../../patches/other-patches/ssu-susfs-main-fix-678c00.patch
           # make SukiSU compatible with backported susfs
-          # patch -p1 < ../patches/susfs-backport/thesillyok-susfs-1.5.12/thesillyok-susfs-1.5.12-compat.patch
+          # patch -p1 < ../../patches/susfs-backport/thesillyok-susfs-1.5.12/thesillyok-susfs-1.5.12-compat.patch
+          )
 
       - name: Start building (without KPM)
         run: |
@@ -112,10 +117,11 @@ jobs:
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' $DEFCONFIG
 
-            if  ${{ github.event.inputs.mock-build == false }}; then
+            if  ${{ github.event.inputs.mock-build == 'false' }}; then
               ../kernel-scripts/build.sh -b
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
+              mkdir -p out/arch/arm64/boot
               touch out/arch/arm64/boot/Image.gz-dtb
             fi
 
@@ -129,10 +135,11 @@ jobs:
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' $DEFCONFIG
 
-            if  ${{ github.event.inputs.mock-build == false }}; then
+            if  ${{ github.event.inputs.mock-build == 'false' }}; then
               ../kernel-scripts/build.sh -b
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
+              mkdir -p out/arch/arm64/boot
               touch out/arch/arm64/boot/Image.gz-dtb
             fi
 
@@ -147,10 +154,11 @@ jobs:
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' $DEFCONFIG
             sed -ri 's/^(CONFIG_KPM=.*|# CONFIG_KPM is not set)/CONFIG_KPM=y/' $DEFCONFIG
 
-            if  ${{ github.event.inputs.mock-build == false }}; then
+            if  ${{ github.event.inputs.mock-build == 'false' }}; then
               ../kernel-scripts/build.sh -b
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
+              mkdir -p out/arch/arm64/boot
               touch out/arch/arm64/boot/Image.gz-dtb
             fi
 
@@ -164,10 +172,11 @@ jobs:
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' $DEFCONFIG
 
-            if  ${{ github.event.inputs.mock-build == false }}; then
+            if  ${{ github.event.inputs.mock-build == 'false' }}; then
               ../kernel-scripts/build.sh -b
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
+              mkdir -p out/arch/arm64/boot
               touch out/arch/arm64/boot/Image.gz-dtb
             fi
 
@@ -232,8 +241,8 @@ jobs:
       - name: Create pre-release
         if: ${{ github.event.inputs.generate_release != 'none' }}
         uses: softprops/action-gh-release@v2
-        prerelease: ${{ github.event.inputs.generate_release == 'pre-release' }}
         with:
+          prerelease: ${{ github.event.inputs.generate_release == 'pre-release' }}
           files: |
             sukisu-begonia-power-kernel-mod.zip
             sukisu-*-begonia-power-kernel-mod.zip
