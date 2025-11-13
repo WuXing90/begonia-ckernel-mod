@@ -30,6 +30,9 @@ jobs:
   just-build-it:
     runs-on: ubuntu-latest
     steps:
+      - name: Add date
+        run: echo "TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
       - name: checkout this repo
         uses: actions/checkout@v5
 
@@ -64,7 +67,7 @@ jobs:
              python3 make gcc g++ bc grep tofrodos python3-markdown libxml2-utils xsltproc zlib1g-dev python-is-python3 libc6-dev libtinfo6 \
              make repo cpio kmod openssl libelf-dev pahole libssl-dev libarchive-tools zstd rsync --fix-missing) &
 
-            if  ${{ github.event.inputs.mock-build == 'false' }}; then
+            if  ${{ github.event.inputs.mock_build == 'false' }}; then
               (mkdir -p "toolchain" && cd "toolchain"
               curl -LO "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
               chmod +x antman && ./antman -S) &
@@ -122,7 +125,7 @@ jobs:
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' $DEFCONFIG
 
-            if  ${{ github.event.inputs.mock-build == 'false' }}; then
+            if  ${{ github.event.inputs.mock_build == 'false' }}; then
               ../kernel-scripts/build.sh -b
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
@@ -141,7 +144,7 @@ jobs:
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' $DEFCONFIG
 
-            if  ${{ github.event.inputs.mock-build == 'false' }}; then
+            if  ${{ github.event.inputs.mock_build == 'false' }}; then
               ../kernel-scripts/build.sh -b
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
@@ -161,7 +164,7 @@ jobs:
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' $DEFCONFIG
             sed -ri 's/^(CONFIG_KPM=.*|# CONFIG_KPM is not set)/CONFIG_KPM=y/' $DEFCONFIG
 
-            if  ${{ github.event.inputs.mock-build == 'false' }}; then
+            if  ${{ github.event.inputs.mock_build == 'false' }}; then
               ../kernel-scripts/build.sh -b
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
@@ -180,7 +183,7 @@ jobs:
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' $DEFCONFIG
 
-            if  ${{ github.event.inputs.mock-build == 'false' }}; then
+            if  ${{ github.event.inputs.mock_build == 'false' }}; then
               ../kernel-scripts/build.sh -b
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
@@ -252,11 +255,12 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           prerelease: ${{ github.event.inputs.generate_release == 'pre-release' }}
+          tag_name: ${{ env.TAG }}
           files: |
             sukisu-begonia-power-kernel-mod.zip
             sukisu-*-begonia-power-kernel-mod.zip
             sukisu-begonia-power-kernel-mod-src.zip
           body: |
-            Power Kernel commit: `${{ env.KERNEL_COMMIR }}`
+            Power Kernel commit: `${{ env.KERNEL_COMMIT }}`
             SukiSU commit: `${{ env.SUKISU_COMMIT }}@${{ env.SUKISU_BRANCH }}`
             susfs version: `1.5.12`
