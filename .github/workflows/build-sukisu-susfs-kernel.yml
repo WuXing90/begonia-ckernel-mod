@@ -55,6 +55,7 @@ jobs:
 
       - name: Setup kernel build stuffs, Neutron Clang and SukiSU (susfs-main)
         run: |
+            set -e
             cd ${{ env.KERNEL_FOLDER }}
 
             (sudo apt update
@@ -75,12 +76,14 @@ jobs:
 
       - name: save SukiSU commit # not using HEAD since we are not fetching latest one
         run: |
+          set -e
           cd ${{ env.KERNEL_FOLDER }}/KernelSU
           echo "SukiSU commit: $(git rev-parse HEAD)@${{ env.SUKISU_BRANCH }}"
           echo "SUKISU_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Fiddle kernel stuff
         run: |
+          set -e
           cd ${{ env.KERNEL_FOLDER }}
           ../kernel-scripts/set-features.sh
 
@@ -89,6 +92,7 @@ jobs:
 
       - name: add KernelSU hook, enable SukiSU and SUSFS
         run: |
+          set -e
           cd ${{ env.KERNEL_FOLDER }}
 
           ../kernel-scripts/plant-ksu-defconfig.sh
@@ -113,6 +117,7 @@ jobs:
 
       - name: Start building (without KPM)
         run: |
+            set -e
             cd ${{ env.KERNEL_FOLDER }}
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' $DEFCONFIG
@@ -131,6 +136,7 @@ jobs:
 
       - name: Enable debug and build again
         run: |
+            set -e
             cd ${{ env.KERNEL_FOLDER }}
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' $DEFCONFIG
@@ -149,6 +155,7 @@ jobs:
 
       - name: Enable KPM and build again with KPM support without debug
         run: |
+            set -e
             cd ${{ env.KERNEL_FOLDER }}
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=n/' $DEFCONFIG
@@ -168,6 +175,7 @@ jobs:
 
       - name: Enable debug and build again
         run: |
+            set -e
             cd ${{ env.KERNEL_FOLDER }}
 
             sed -ri 's/^(CONFIG_KSU_DEBUG=.*|# CONFIG_KSU_DEBUG is not set)/CONFIG_KSU_DEBUG=y/' $DEFCONFIG
@@ -186,6 +194,7 @@ jobs:
 
       - name: Create AnyKernel3 zip installer
         run: |
+          set -e
           echo ak3-ssu ak3-ssu-debug ak3-ssu-kpm ak3-ssu-kpm-debug | xargs -n 1 cp -r ak3
 
           mv begonia-ssu/Image.gz-dtb ak3-ssu/
@@ -238,7 +247,7 @@ jobs:
         if: ${{ github.event.inputs.generate_release != 'none' }}
         run: 'zip -r -9 sukisu-begonia-power-kernel-mod-src.zip ${{ env.KERNEL_FOLDER }}'
 
-      - name: Create pre-release
+      - name: Create release
         if: ${{ github.event.inputs.generate_release != 'none' }}
         uses: softprops/action-gh-release@v2
         with:
