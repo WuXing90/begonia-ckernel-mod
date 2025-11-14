@@ -250,9 +250,15 @@ jobs:
           if-no-files-found: error
           compression-level: 9
 
+      - name: Create commit text for record for release
+        if: ${{ github.event.inputs.generate_release != 'none' }}
+        run: |
+          echo "${{ env.KERNEL_COMMIT }}" >> ${{ env.KERNEL_FOLDER }}/commit.txt
+          echo "${{ env.SUKISU_COMMIT }}@${{ env.SUKISU_BRANCH }}" >> ${{ env.KERNEL_FOLDER }}/KernelSU/commit.txt
+
       - name: Pack kernel source for release
         if: ${{ github.event.inputs.generate_release != 'none' }}
-        run: 'cd ${{ env.KERNEL_FOLDER }} && zip -r -9 ../sukisu-begonia-power-kernel-mod-src.zip . -x "out/*" "toolchain/*"'
+        run: 'cd ${{ env.KERNEL_FOLDER }} && zip -r -9 ../sukisu-begonia-power-kernel-mod-src.zip . -x "out/*" "toolchain/*" ".git/*" "KernelSU/.git/*"'
 
       - name: Create release
         if: ${{ github.event.inputs.generate_release != 'none' }}
