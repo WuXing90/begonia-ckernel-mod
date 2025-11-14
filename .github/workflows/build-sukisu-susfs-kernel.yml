@@ -1,5 +1,7 @@
 name: Build SukiSU + susfs Kernel
 run-name: Build da kernel
+# I am aware of GitHub releases, but due to 2FA requirement i am not going to make it. I'm sorry about that, but please understand my choice since i do not take this lightly.
+# https://docs.github.com/authentication/securing-your-account-with-two-factor-authentication-2fa/about-mandatory-two-factor-authentication
 on:
   workflow_dispatch:
     inputs:
@@ -11,15 +13,6 @@ on:
         type: boolean
         default: false
         description: Upload built AnyKernel3 folder to artifact
-      generate_release:
-        type: choice
-        description: Generate release?
-        default: none
-        options:
-          - none
-          - pre-release
-          - release
-        required: true
 
 permissions:
   contents: write
@@ -71,9 +64,11 @@ jobs:
              make repo cpio kmod openssl libelf-dev pahole libssl-dev libarchive-tools zstd rsync --fix-missing) &
 
             if  ${{ github.event.inputs.mock_build == 'false' }}; then
-              (mkdir -p "toolchain" && cd "toolchain"
+              (# mkdir -p "toolchain" && cd "toolchain"
+              mkdir -p $HOME/neutron-clang && $HOME/neutron-clang
               curl -LO "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
-              chmod +x antman && ./antman -S) &
+              chmod +x antman && ./antman -S
+              ln -s $HOME/toolchain ${{ env.KERNEL_FOLDER }}/toolchain) &
             fi
 
             ../ext-scripts/sukisu-setup.sh ${{ env.SUKISU_BRANCH }} &
@@ -209,26 +204,26 @@ jobs:
           mv begonia-ssu-kpm/Image.gz-dtb ak3-ssu-kpm/
           mv begonia-ssu-kpm-debug/Image.gz-dtb ak3-ssu-kpm-debug/
 
-          (cd ak3-ssu && zip -r -9 ../sukisu-begonia-power-kernel-mod.zip .)
-          (cd ak3-ssu-debug && zip -r -9 ../sukisu-debug-begonia-power-kernel-mod.zip .)
-          (cd ak3-ssu-kpm && zip -r -9 ../sukisu-kpm-begonia-power-kernel-mod.zip .)
-          (cd ak3-ssu-kpm-debug && zip -r -9 ../sukisu-kpm-debug-begonia-power-kernel-mod.zip .)
+          (cd ak3-ssu && zip -r -9 ../sukisu-begonia-power-kernel-mod.zip . -x ".git/*")
+          (cd ak3-ssu-debug && zip -r -9 ../sukisu-debug-begonia-power-kernel-mod.zip . -x ".git/*")
+          (cd ak3-ssu-kpm && zip -r -9 ../sukisu-kpm-begonia-power-kernel-mod.zip . -x ".git/*")
+          (cd ak3-ssu-kpm-debug && zip -r -9 ../sukisu-kpm-debug-begonia-power-kernel-mod.zip . -x ".git/*")
 
-      - name: Upload SukiSU AnyKernel3 files to artifact
+      - name: Upload SukiSU AnyKernel3 zip to artifact
         if: ${{ github.event.inputs.upload_artifact == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: 'sukisu-begonia-power-kernel'
-          path: 'ak3-ssu/*'
+          path: 'sukisu-begonia-power-kernel-mod.zip'
           if-no-files-found: error
           compression-level: 9
 
-      - name: Upload SukiSU debug AnyKernel3 files to artifact
+      - name: Upload SukiSU debug AnyKernel3 zip to artifact
         if: ${{ github.event.inputs.upload_artifact == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: 'sukisu-debug-begonia-power-kernel'
-          path: 'ak3-ssu-debug/*'
+          path: 'sukisu-debug-begonia-power-kernel-mod.zip'
           if-no-files-found: error
           compression-level: 9
 
@@ -237,7 +232,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: 'sukisu-kpm-begonia-power-kernel'
-          path: 'ak3-ssu-kpm/*'
+          path: 'sukisu-kpm-begonia-power-kernel-mod.zip'
           if-no-files-found: error
           compression-level: 9
 
@@ -246,31 +241,22 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: 'sukisu-kpm-debug-begonia-power-kernel'
-          path: 'ak3-ssu-kpm-debug/*'
+          path: 'sukisu-kpm-debug-begonia-power-kernel-mod.zip'
           if-no-files-found: error
           compression-level: 9
 
-      - name: Create commit text for record for release
-        if: ${{ github.event.inputs.generate_release != 'none' }}
+      - name: Create commit text for record for artifact
+        if: ${{ github.event.inputs.upload_artifact == 'true' }}
         run: |
           echo "${{ env.KERNEL_COMMIT }}" >> ${{ env.KERNEL_FOLDER }}/commit.txt
           echo "${{ env.SUKISU_COMMIT }}@${{ env.SUKISU_BRANCH }}" >> ${{ env.KERNEL_FOLDER }}/KernelSU/commit.txt
 
-      - name: Pack kernel source for release
-        if: ${{ github.event.inputs.generate_release != 'none' }}
-        run: 'cd ${{ env.KERNEL_FOLDER }} && zip -r -9 ../sukisu-begonia-power-kernel-mod-src.zip . -x "out/*" "toolchain/*" ".git/*" "KernelSU/.git/*"'
-
-      - name: Create release
-        if: ${{ github.event.inputs.generate_release != 'none' }}
-        uses: softprops/action-gh-release@v2
+      - name: Upload kernel source to artifact
+        if: ${{ github.event.inputs.upload_artifact == 'true' }}
+        uses: actions/upload-artifact@v4
         with:
-          prerelease: ${{ github.event.inputs.generate_release == 'pre-release' }}
-          tag_name: ${{ env.TAG }}
-          files: |
-            sukisu-begonia-power-kernel-mod.zip
-            sukisu-*-begonia-power-kernel-mod.zip
-            sukisu-begonia-power-kernel-mod-src.zip
-          body: |
-            Power Kernel commit: `${{ env.KERNEL_COMMIT }}`
-            SukiSU commit: `${{ env.SUKISU_COMMIT }}@${{ env.SUKISU_BRANCH }}`
-            susfs version: `1.5.12`
+          name: 'sukisu-kpm-begonia-power-kernel'
+          path: '${{ env.KERNEL_FOLDER }}/*'
+          if-no-files-found: error
+          compression-level: 9
+          include-hidden-files: false

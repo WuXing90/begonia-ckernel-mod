@@ -2,8 +2,9 @@
   "name": "Just My Gaming Chair",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
   "features":{
-    "ghcr.io/devcontainers-extra/features/act:1": {},
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    "ghcr.io/devcontainers-extra/features/act": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker": {},
+    "ghcr.io/devcontainers/features/docker-in-docker": {}
   },
   "customizations": {
     "vscode": {
@@ -40,7 +41,10 @@
         "shardulm94.trailing-spaces",
 
         // GitHub Actions
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+
+        // Container Tools
+        "ms-azuretools.vscode-containers"
       ],
       "settings": {
         "chat.disableAIFeatures": true,
