@@ -21,6 +21,9 @@ on:
           - release
         required: true
 
+permissions:
+  contents: write
+
 env:
   KERNEL_FOLDER: 'kxm'
   DEFCONFIG: 'arch/arm64/configs/begonia_user_defconfig' # relative to kernel folder
