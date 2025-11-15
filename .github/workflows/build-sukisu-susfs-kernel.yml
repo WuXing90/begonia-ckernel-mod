@@ -61,7 +61,7 @@ jobs:
              sudo apt install -y git device-tree-compiler lz4 xz-utils zlib1g-dev openjdk-17-jdk gcc g++ python3 python-is-python3 p7zip-full android-sdk-libsparse-utils erofs-utils \
              default-jdk gnupg flex bison gperf build-essential zip curl libc6-dev libncurses-dev libx11-dev libreadline-dev libgl1 libgl1-mesa-dev \
              python3 make gcc g++ bc grep tofrodos python3-markdown libxml2-utils xsltproc zlib1g-dev python-is-python3 libc6-dev libtinfo6 \
-             make repo cpio kmod openssl libelf-dev pahole libssl-dev libarchive-tools zstd rsync --fix-missing) &
+             make repo cpio kmod openssl libelf-dev pahole libssl-dev libarchive-tools zstd rsync pigz --fix-missing) &
 
             if  ${{ github.event.inputs.mock_build == 'false' }}; then
               (# mkdir -p "toolchain" && cd "toolchain"
@@ -259,15 +259,21 @@ jobs:
           echo "${{ env.KERNEL_COMMIT }}" >> ${{ env.KERNEL_FOLDER }}/commit.txt
           echo "${{ env.SUKISU_COMMIT }}@${{ env.SUKISU_BRANCH }}" >> ${{ env.KERNEL_FOLDER }}/KernelSU/commit.txt
 
+      - name: Pack kernel source
+        if : ${{ github.event.inputs.upload_artifact == 'true' }}
+        run: |
+            tar --use-compress-program="pigz -k -9" \
+              --exclude="${{ env.KERNEL_FOLDER }}/.git/*"\
+              --exclude="${{ env.KERNEL_FOLDER }}/KernelSU/.git/*" \
+              -cvf sukisu-kpm-debug-begonia-power-kernel-src.tar.gz  \
+              "${{ env.KERNEL_FOLDER }}/*"
+  
       - name: Upload kernel source to artifact
         if: ${{ github.event.inputs.upload_artifact == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: 'sukisu-kpm-debug-begonia-power-kernel-src'
-          path: |
-              ${{ env.KERNEL_FOLDER }}/*
-              !${{ env.KERNEL_FOLDER }}/.git/*
-              !${{ env.KERNEL_FOLDER }}/KernelSU/.git/*
+          path: 'sukisu-kpm-debug-begonia-power-kernel-src.tar.gz'
           if-no-files-found: error
           compression-level: 9
           include-hidden-files: false
