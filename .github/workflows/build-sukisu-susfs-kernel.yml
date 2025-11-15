@@ -65,10 +65,10 @@ jobs:
 
             if  ${{ github.event.inputs.mock_build == 'false' }}; then
               (# mkdir -p "toolchain" && cd "toolchain"
-              mkdir -p $HOME/neutron-clang && $HOME/neutron-clang
+              mkdir -p $HOME/neutron-clang && cd $HOME/neutron-clang
               curl -LO "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
               chmod +x antman && ./antman -S
-              ln -s $HOME/toolchain ${{ env.KERNEL_FOLDER }}/toolchain) &
+              ln -s $HOME/neutron-clang ${{ env.KERNEL_FOLDER }}/toolchain) &
             fi
 
             ../ext-scripts/sukisu-setup.sh ${{ env.SUKISU_BRANCH }} &
