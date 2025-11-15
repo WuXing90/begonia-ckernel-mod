@@ -266,7 +266,7 @@ jobs:
               --exclude=".git"\
               --exclude="KernelSU/.git" \
               -cvf sukisu-kpm-debug-begonia-power-kernel-src.tar.gz  \
-              -C "${{ env.KERNEL_FOLDER }} ."
+              -C "${{ env.KERNEL_FOLDER }}" .
   
       - name: Upload kernel source to artifact
         if: ${{ github.event.inputs.upload_artifact == 'true' }}
