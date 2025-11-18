@@ -12,6 +12,10 @@ on:
         type: boolean
         default: false
         description: Upload built AnyKernel3 folder to artifact
+      add_kpm_build:
+        type: boolean
+        default: false
+        description: Add KPM build (not working atm)
       generate_release:
         type: choice
         description: Generate release? You will need to enable 2FA after you create release
@@ -34,6 +38,10 @@ jobs:
   just-build-it:
     runs-on: ubuntu-latest
     steps:
+      - name: put input to variables
+        run: |
+          echo "ADD_KPM_BUILD=${{ github.event.inputs.add_kpm_build }}" >> $GITHUB_ENV
+
       - name: Add date
         run: echo "TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
 
@@ -164,6 +172,7 @@ jobs:
             cp ${{ env.KERNEL_FOLDER }}/out/arch/arm64/boot/Image.gz-dtb begonia-ssu-debug/
 
       - name: Enable KPM and build again with KPM support without debug
+        if: ${{ github.event.inputs.add_kpm_build == 'true' }}
         run: |
             set -e
             cd ${{ env.KERNEL_FOLDER }}
@@ -184,6 +193,7 @@ jobs:
             cp ${{ env.KERNEL_FOLDER }}/out/arch/arm64/boot/Image.gz-dtb begonia-ssu-kpm/
 
       - name: Enable debug and build again
+        if: ${{ github.event.inputs.add_kpm_build == 'true' }}
         run: |
             set -e
             cd ${{ env.KERNEL_FOLDER }}
@@ -240,7 +250,7 @@ jobs:
           compression-level: 9
 
       - name: Upload SukiSU KPM zip to artifact
-        if: ${{ github.event.inputs.upload_artifact == 'true' }}
+        if: ${{ (github.event.inputs.upload_artifact == 'true') && (github.event.inputs.add_kpm_build == 'true') }}
         uses: actions/upload-artifact@v4
         with:
           name: 'sukisu-kpm-begonia-power-kernel'
@@ -251,7 +261,7 @@ jobs:
           compression-level: 9
 
       - name: Upload SukiSU KPM debug zip to artifact
-        if: ${{ github.event.inputs.upload_artifact == 'true' }}
+        if: ${{ (github.event.inputs.upload_artifact == 'true') && (github.event.inputs.add_kpm_build == 'true') }}
         uses: actions/upload-artifact@v4
         with:
           name: 'sukisu-kpm-debug-begonia-power-kernel'
