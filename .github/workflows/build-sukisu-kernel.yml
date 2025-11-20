@@ -1,4 +1,4 @@
-name: Build SukiSU + susfs Kernel
+name: Build SukiSU Kernel
 run-name: Build da kernel
 
 on:
@@ -32,8 +32,7 @@ permissions:
 env:
   KERNEL_FOLDER: 'kxm'
   DEFCONFIG: 'arch/arm64/configs/begonia_user_defconfig' # relative to kernel folder
-  SUKISU_BRANCH: 'susfs-main'
-  SUSFS_VER: '1.5.12'
+  SUKISU_BRANCH: 'nongki'
 
 jobs:
   just-build-it:
@@ -44,7 +43,7 @@ jobs:
           echo "ADD_KPM_BUILD=${{ github.event.inputs.add_kpm_build }}" >> $GITHUB_ENV
 
       - name: Add date
-        run: echo "TAG=$(date +%Y%m%d%H%M%S)-sus" >> $GITHUB_ENV
+        run: echo "TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
 
       - name: checkout this repo
         uses: actions/checkout@v5
@@ -115,27 +114,8 @@ jobs:
 
           ../kernel-scripts/plant-ksu-defconfig.sh
           ../kernel-scripts/enable-ksu.sh
-          ../kernel-scripts/plant-susfs-defconfig.sh
-          ../kernel-scripts/sussifykernel.sh
 
           patch -p1 < ../patches/ksu-hook-min/ksu-hook-min-1.6.patch
-
-          (
-          cd KernelSU
-          # temporary fix SukiSU compile issues on susfs-main-branch
-          patch -p1 < ../../patches/other-patches/ssu-susfs-main-fix-678c00.patch
-          # make SukiSU compatible with backported susfs
-          # patch -p1 < ../../patches/susfs-backport/thesillyok-susfs-1.5.12/thesillyok-susfs-1.5.12-compat-678c00.patch
-          )
-
-      - name: Integrate susfs
-        run: |
-          set -e
-          cd ${{ env.KERNEL_FOLDER }}
-
-          cp -r ../patches/susfs-backport/thesillyok-susfs-1.5.12/fs/* fs/
-          cp -r ../patches/susfs-backport/thesillyok-susfs-1.5.12/include/linux/* include/linux/
-          patch -p1 < ../patches/susfs-backport/thesillyok-susfs-1.5.12/thesillyok-susfs-1.5.12-mod.patch
 
       - name: Start building (without KPM)
         run: |
@@ -315,4 +295,3 @@ jobs:
             Power Kernel commit: `${{ env.KERNEL_COMMIT }}`
             SukiSU commit: `${{ env.SUKISU_COMMIT }}`
             SukiSU branch: `${{ env.SUKISU_BRANCH }}`
-            susfs version: `${{ env.SUSFS_VER }}`
