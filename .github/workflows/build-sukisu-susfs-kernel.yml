@@ -227,10 +227,11 @@ jobs:
           mv begonia-ssu-kpm/Image.gz-dtb ak3-ssu-kpm/
           mv begonia-ssu-kpm-debug/Image.gz-dtb ak3-ssu-kpm-debug/
 
-          # (cd ak3-ssu && zip -r -9 ../sukisu-begonia-power-kernel-mod.zip . -x ".git/*")
-          # (cd ak3-ssu-debug && zip -r -9 ../sukisu-debug-begonia-power-kernel-mod.zip . -x ".git/*")
-          # (cd ak3-ssu-kpm && zip -r -9 ../sukisu-kpm-begonia-power-kernel-mod.zip . -x ".git/*")
-          # (cd ak3-ssu-kpm-debug && zip -r -9 ../sukisu-kpm-debug-begonia-power-kernel-mod.zip . -x ".git/*")
+          (cd ak3-ssu && zip -r -9 ../sukisu-begonia-power-kernel-mod.zip . -x ".git/*") &
+          (cd ak3-ssu-debug && zip -r -9 ../sukisu-debug-begonia-power-kernel-mod.zip . -x ".git/*") &
+          (cd ak3-ssu-kpm && zip -r -9 ../sukisu-kpm-begonia-power-kernel-mod.zip . -x ".git/*") &
+          (cd ak3-ssu-kpm-debug && zip -r -9 ../sukisu-kpm-debug-begonia-power-kernel-mod.zip . -x ".git/*") &
+          wait
 
       - name: Upload SukiSU AnyKernel3 zip to artifact
         if: ${{ github.event.inputs.upload_artifact == 'true' }}
