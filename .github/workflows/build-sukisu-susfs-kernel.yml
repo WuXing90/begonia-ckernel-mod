@@ -288,6 +288,7 @@ jobs:
             tar --use-compress-program="pigz -k -9" \
               --exclude=".git"\
               --exclude="KernelSU/.git" \
+              --exclude="out"\
               -cvf sukisu-begonia-power-kernel-src.tar.gz  \
               -C "${{ env.KERNEL_FOLDER }}" .
   
