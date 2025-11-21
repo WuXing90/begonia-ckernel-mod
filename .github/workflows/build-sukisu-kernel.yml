@@ -268,15 +268,15 @@ jobs:
             tar --use-compress-program="pigz -k -9" \
               --exclude=".git"\
               --exclude="KernelSU/.git" \
-              -cvf sukisu-kpm-debug-begonia-power-kernel-src.tar.gz  \
+              -cvf sukisu-begonia-power-kernel-src.tar.gz  \
               -C "${{ env.KERNEL_FOLDER }}" .
   
       - name: Upload kernel source to artifact
         if: ${{ github.event.inputs.upload_artifact == 'true' }}
         uses: actions/upload-artifact@v4
         with:
-          name: 'sukisu-kpm-debug-begonia-power-kernel-src'
-          path: 'sukisu-kpm-debug-begonia-power-kernel-src.tar.gz'
+          name: 'sukisu-kpm-begonia-power-kernel-src'
+          path: 'sukisu-begonia-power-kernel-src.tar.gz'
           if-no-files-found: error
           compression-level: 9
           include-hidden-files: false
