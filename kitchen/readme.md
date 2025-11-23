@@ -87,3 +87,13 @@ Original Power kernel image format uses `Image.gz-dtb`, but in some cases you wa
 3. After you have it compressed `Image.gz` will appear, now run `cat Image.gz devicetree.dtb > Image.gz-dtb`
 
 Look, now you have created `Image.gz-dtb`. That kernel image format actually is just gzipped kernel image with dtb appended to it.
+
+## KVM
+
+I have enabled KVM in kernel to add virtualization support for apps that utilize this feature. You can check enabled KVM features in `enable-kvm-vfio.sh` script as reference.  Bear in mind this virtualization is pretty limited, it can emulate Linux (testing with Alpine Linux) but can't emulate Windows. If you managed to run Windows with it please tell me.
+
+This feature is kinda handy for anyone that wants to run Docker without changing system too much.
+
+Sauce i'm using: https://blog.lyc8503.net/en/post/android-kvm-on-mediatek/
+
+Emulator i'm using: https://github.com/wasdwasd0105/limbo_tensor
