@@ -73,6 +73,7 @@ jobs:
       - name: Setup kernel build stuffs, Neutron Clang and SukiSU (susfs-main)
         run: |
             set -e
+            chmod -R 755 ./
 
             # Create $HOME/.local/bin folder
             # GH Actions seemed to not create this folder by default
