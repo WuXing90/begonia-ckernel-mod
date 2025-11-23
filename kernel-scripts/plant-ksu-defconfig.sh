@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 export DEFCONFIG="$PWD/arch/arm64/configs/begonia_user_defconfig"
