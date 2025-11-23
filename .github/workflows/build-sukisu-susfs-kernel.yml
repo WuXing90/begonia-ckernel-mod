@@ -205,7 +205,7 @@ jobs:
               rm -rf Image Image.gz
               mv oImage Image
               gzip -k -6 Image
-              cat Image.gz mtk.dtb > $file_output
+              cat Image.gz mtk.dtb > Image.gz-dtb
               )
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
@@ -236,7 +236,7 @@ jobs:
               rm -rf Image Image.gz
               mv oImage Image
               gzip -k -6 Image
-              cat Image.gz mtk.dtb > $file_output
+              cat Image.gz mtk.dtb > Image.gz-dtb
               )
             else
               echo "WARNING: Mock build enabled. Generating fake files instead..."
