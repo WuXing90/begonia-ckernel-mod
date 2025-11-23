@@ -5,7 +5,7 @@ export DEV_DEFCONFIG="$PWD/arch/arm64/configs/begonia_user_defconfig"
 
 # comment means left to config defaults
 declare -a enable_feature_flags=(
-    # KVM
+    # General virtualization
     "CONFIG_VIRTUALIZATION"
     "CONFIG_ARM64_VHE"
 
@@ -17,6 +17,8 @@ declare -a enable_feature_flags=(
 declare -a add_enable_feature_flags=(
     # KVM
     "CONFIG_KVM"
+    "CONFIG_KVM_ARM_HOST"
+    "CONFIG_KVM_MMIO"
 
     # VFIO
     "CONFIG_VFIO_CCW"
