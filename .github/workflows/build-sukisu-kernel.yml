@@ -15,7 +15,7 @@ on:
       add_kpm_build:
         type: boolean
         default: false
-        description: Add KPM build (not working atm)
+        description: Add KPM build (not stable atm)
       generate_release:
         type: choice
         description: Generate release? You will need to enable 2FA after you create release
@@ -70,7 +70,7 @@ jobs:
           ref: 'begonia-ksu-base'
           path: 'ak3'
 
-      - name: Setup kernel build stuffs, Neutron Clang and SukiSU (susfs-main)
+      - name: Setup kernel build stuffs, Neutron Clang and SukiSU (nongki)
         run: |
             set -e
             chmod -R 755 ./
@@ -247,13 +247,18 @@ jobs:
 
           mv begonia-ssu/Image.gz-dtb ak3-ssu/
           mv begonia-ssu-debug/Image.gz-dtb ak3-ssu-debug/
-          mv begonia-ssu-kpm/Image.gz-dtb ak3-ssu-kpm/
-          mv begonia-ssu-kpm-debug/Image.gz-dtb ak3-ssu-kpm-debug/
 
           (cd ak3-ssu && zip -r -9 ../sukisu-begonia-power-kernel-mod.zip . -x ".git/*") &
           (cd ak3-ssu-debug && zip -r -9 ../sukisu-debug-begonia-power-kernel-mod.zip . -x ".git/*") &
-          (cd ak3-ssu-kpm && zip -r -9 ../sukisu-kpm-begonia-power-kernel-mod.zip . -x ".git/*") &
-          (cd ak3-ssu-kpm-debug && zip -r -9 ../sukisu-kpm-debug-begonia-power-kernel-mod.zip . -x ".git/*") &
+
+          if  $ADD_KPM_BUILD; then
+            mv begonia-ssu-kpm/Image.gz-dtb ak3-ssu-kpm/
+            mv begonia-ssu-kpm-debug/Image.gz-dtb ak3-ssu-kpm-debug/
+          else
+            (cd ak3-ssu-kpm && zip -r -9 ../sukisu-kpm-begonia-power-kernel-mod.zip . -x ".git/*") &
+            (cd ak3-ssu-kpm-debug && zip -r -9 ../sukisu-kpm-debug-begonia-power-kernel-mod.zip . -x ".git/*") &
+          fi
+
           wait
 
       - name: Upload SukiSU AnyKernel3 zip to artifact
