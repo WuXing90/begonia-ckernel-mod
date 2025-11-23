@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-export DEFCONFIG="$PWD/arch/arm64/configs/begonia_user_defconfig"
+export DEV_DEFCONFIG="$PWD/arch/arm64/configs/begonia_user_defconfig"
 
 # comment means left to config defaults
 declare -a add_feature_flags=(

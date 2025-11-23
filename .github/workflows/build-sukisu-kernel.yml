@@ -275,6 +275,13 @@ jobs:
               --exclude="out" \
               -cvf sukisu-begonia-power-kernel-src.tar.gz  \
               -C "${{ env.KERNEL_FOLDER }}" .
+
+      - name: Pack kernel output (for reference only)
+        if : ${{ (github.event.inputs.upload_artifact == 'true') || (github.event.inputs.generate_release != 'none') }}
+        run: |
+            tar --use-compress-program="pigz -k -9" \
+              -cvf sukisu-begonia-power-kernel-src.tar.gz  \
+              -C "${{ env.KERNEL_FOLDER }}/out" .
   
       - name: Upload kernel source to artifact
         if: ${{ github.event.inputs.upload_artifact == 'true' }}

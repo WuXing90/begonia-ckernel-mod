@@ -303,6 +303,13 @@ jobs:
           compression-level: 9
           include-hidden-files: false
 
+      - name: Pack kernel output (for reference only)
+        if : ${{ (github.event.inputs.upload_artifact == 'true') || (github.event.inputs.generate_release != 'none') }}
+        run: |
+            tar --use-compress-program="pigz -k -9" \
+              -cvf sukisu-begonia-power-kernel-src.tar.gz  \
+              -C "${{ env.KERNEL_FOLDER }}/out" .
+
       - name: Create release
         if: ${{ github.event.inputs.generate_release != 'none' }}
         uses: softprops/action-gh-release@v2
