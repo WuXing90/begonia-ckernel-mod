@@ -20,7 +20,7 @@ declare -a enable_feature_flags=(
     # "CONFIG_TRANSPARENT_HUGEPAGE_MADVISE"
 
     # Misc
-    "CONFIG_ARM64_VA_BITS_48"
+    # "CONFIG_ARM64_VA_BITS_48"
     "CONFIG_CMA"
     "CONFIG_ARM_GIC_V3"
 )
@@ -44,7 +44,7 @@ declare -a add_enable_feature_flags=(
 
     # VirtIO
     "CONFIG_VIRTIO"
-    # "CONFIG_VIRTIO_BALLOON"
+    "CONFIG_VIRTIO_BALLOON"
     "CONFIG_VHOST_NET"
     "CONFIG_VHOST_CROSS_ENDIAN_LEGACY"
 
