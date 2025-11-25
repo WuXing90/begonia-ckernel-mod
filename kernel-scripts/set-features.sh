@@ -63,15 +63,15 @@ done
 # disable features logic
 for CONFIG in "${disable_feature_flags[@]}"
 do
-   sed -ri "s/^($CONFIG=.*|# $CONFIG is not set)/$CONFIG=n/" $DEV_DEFCONFIG
-   sed -ri "s/^($CONFIG=.*|# $CONFIG is not set)/$CONFIG=n/" $STOCK_DEFCONFIG
+   sed -ri "s/^($CONFIG=.*|# $CONFIG is not set)/# $CONFIG is not set/" $DEV_DEFCONFIG
+   sed -ri "s/^($CONFIG=.*|# $CONFIG is not set)/# $CONFIG is not set/" $STOCK_DEFCONFIG
 done
 
 # add and disable features logic
 for CONFIG in "${add_disable_feature_flags[@]}"
 do
-   echo "$CONFIG=n" >> $DEV_DEFCONFIG
-   echo "$CONFIG=n" >> $STOCK_DEFCONFIG
+   echo "# $CONFIG is not set" >> $DEV_DEFCONFIG
+   echo "# $CONFIG is not set" >> $STOCK_DEFCONFIG
 done
 
 # edit kernel suffix for evade play integrity detection
