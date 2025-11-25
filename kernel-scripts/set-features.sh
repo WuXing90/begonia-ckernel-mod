@@ -11,7 +11,7 @@ declare -a enable_feature_flags=(
     # KernelPatch like APatch and their kids requirements
     "CONFIG_KALLSYMS" 
     "CONFIG_KALLSYMS_ALL"
-    "CONFIG_KALLSYMS_BASE_RELATIVE"
+    # "CONFIG_KALLSYMS_BASE_RELATIVE"
     # If you plan to build with vanilla kernelsu (or any kernelsu fork) with manual hook that
     # isn't kprobes-tolerant you should  disable kprobes
     "CONFIG_KPROBES"
@@ -40,7 +40,7 @@ declare -a disable_feature_flags=(
 
 # Disable CONFIG_DEBUG_KERNEL to make KPM more stable?
 if [ "$ENABLE_CONFIG_DEBUG_KERNEL" = "false" ]; then
-   # disable_feature_flags+=('CONFIG_DEBUG_KERNEL')
+   disable_feature_flags+=('CONFIG_DEBUG_KERNEL')
 fi
 
 declare -a add_disable_feature_flags=(
