@@ -58,8 +58,8 @@ jobs:
       - name: checkout kernel repo
         uses: actions/checkout@v5
         with:
-          repository: 'Saikrishna1504/kernel_xiaomi_mt6785' # use bka branch
-          ref: 'b689ceb2c9c978acfe23b2e486aeb82e929105f2' # last good commit
+          repository: 'WuXing90/kernel_xiaomi_mt6785' # use bka branch
+          ref: '028af8bb01ee7e1168726970e3580a2c4029aa03' # last good commit
           path: ${{ env.KERNEL_FOLDER }}
 
       - name: save kernel commit # not using HEAD since we are not fetching latest one
