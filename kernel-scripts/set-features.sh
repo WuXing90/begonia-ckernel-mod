@@ -29,6 +29,8 @@ declare -a enable_feature_flags=(
     "CONFIG_MODVERSIONS"
     # ARM virtualization
     "CONFIG_ARM64_VHE"
+    # Just a helpful kernel feature for KernelSU and its forks
+    "CONFIG_HAVE_SYSCALL_TRACEPOINTS"
 )
 
 declare -a add_enable_feature_flags=(
