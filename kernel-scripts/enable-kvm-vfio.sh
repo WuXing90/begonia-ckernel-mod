@@ -14,6 +14,10 @@ declare -a enable_feature_flags=(
     "CONFIG_VFIO"
     "CONFIG_IOMMU_SUPPORT"
 
+    # VirtIO
+    "CONFIG_VIRTIO"
+    "CONFIG_VIRTIO_BALLOON"
+
     # Might slow down or causing problems with
     # system, but makes KVM support better
     # (whoops, seems to break compile)
@@ -43,8 +47,6 @@ declare -a add_enable_feature_flags=(
     "CONFIG_S390_AP_IOMMU"
 
     # VirtIO
-    "CONFIG_VIRTIO"
-    "CONFIG_VIRTIO_BALLOON"
     "CONFIG_VHOST_NET"
     "CONFIG_VHOST_CROSS_ENDIAN_LEGACY"
 
