@@ -12,8 +12,8 @@ declare -a enable_feature_flags=(
     "CONFIG_KALLSYMS" 
     "CONFIG_KALLSYMS_ALL"
     "CONFIG_KALLSYMS_BASE_RELATIVE"
-    # If you plan to build with vanilla kernelsu (or any kernelsu fork) with manual hook that
-    # isn't kprobes-tolerant you should disable kprobes and kretprobes
+    # If your kernel have problem with kprobes
+    # you should disable kprobes and kretprobes
     "CONFIG_KPROBES"
     "CONFIG_HAVE_KPROBES"
     # same goes for this one
@@ -34,8 +34,8 @@ declare -a enable_feature_flags=(
 )
 
 declare -a add_enable_feature_flags=(
-    # If you plan to build with vanilla kernelsu (or any kernelsu fork) with manual hook that
-    # isn't kprobes-tolerant you should  disable kprobes and kretprobes
+    # If your kernel have problem with kprobes
+    # you should disable kprobes and kretprobes
     "CONFIG_KPROBE_EVENTS"
     # same goes for this one
     "CONFIG_KRETPROBES"
