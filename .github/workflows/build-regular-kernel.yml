@@ -109,7 +109,7 @@ jobs:
             wait
 
       - name: Integrate Wireguard
-        if: ${{ github.env.INTEGRATE_WIREGUARD == 'true' }}
+        if: ${{ env.INTEGRATE_WIREGUARD == 'true' }}
         run: |
           cd ${{ env.KERNEL_FOLDER }}
           git clone -b ${{ github.env.WIREGUARD_BRANCH }} --depth 1 https://github.com/WireGuard/wireguard-linux-compat wireguard
