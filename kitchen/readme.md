@@ -90,10 +90,23 @@ Look, now you have created `Image.gz-dtb`. That kernel image format actually is 
 
 ## KVM
 
-I have enabled KVM in kernel to add virtualization support for apps that utilize this feature. You can check enabled KVM features in `enable-kvm-vfio.sh` script as reference.  Bear in mind this virtualization is pretty limited, it can emulate Linux (testing with Alpine Linux) but can't emulate Windows. If you managed to run Windows with it please tell me.
+I have enabled KVM in kernel to add virtualization support for apps that utilize this feature. You can check enabled KVM features in `enable-kvm-vfio.sh` script as reference.  Bear in mind this virtualization is pretty limited, it can emulate Linux (testing with Alpine Linux) but can't emulate OS that requires full UEFI (i.e. Windows) with my current kernel (Power Kernel). If you managed to run Windows with it please tell me.
 
 This feature is kinda handy for anyone that wants to run Docker without changing system too much.
 
 Sauce i'm using: https://blog.lyc8503.net/en/post/android-kvm-on-mediatek/
 
 Emulator i'm using: https://github.com/wasdwasd0105/limbo_tensor
+
+## Wireguard
+
+Wireguard also enabled in Power kernel, but sadly it is pretty limited in terms of support as it has local peer issue. To integrate this, run these example commands in your root kernel source:
+
+```
+git clone -b master --depth 1 'https://github.com/WireGuard/wireguard-linux-compat' wireguard
+./wireguard/kernel-tree-scripts/create-patch.sh | patch -p1
+./wireguard/kernel-tree-scripts/jury-rig.sh .
+echo "CONFIG_WIREGUARD=y" >> your_kernel_configs
+```
+
+As always if you have fix for this issue please tell me.
