@@ -43,7 +43,7 @@ env:
   KERNEL_FOLDER: 'kxm'
   DEFCONFIG: 'arch/arm64/configs/begonia_user_defconfig' # relative to kernel folder
   KERNEL_OUT_DIR: 'out/arch/arm64/boot/' # relative to kernel folder
-  WIREGUARD_BRANCH: 'v1.0.20220627'
+  WIREGUARD_BRANCH: 'master'
   DTB_OUT_DIR: '' # relative to kernel folder
 
 jobs:
