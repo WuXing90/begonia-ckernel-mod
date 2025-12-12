@@ -69,8 +69,8 @@ jobs:
       - name: checkout kernel repo
         uses: actions/checkout@v5
         with:
-          repository: 'F640/kernel_xiaomi_mt6785_begonia_power_kernel' # use bka branch
-          ref: 'bka'
+          repository: 'WuXing90/kernel_xiaomi_mt6785' # use bka branch
+          ref: 'erofs'
           path: ${{ env.KERNEL_FOLDER }}
 
       - name: save kernel commit # not using HEAD since we are not fetching latest one
