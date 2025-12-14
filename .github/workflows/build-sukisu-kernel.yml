@@ -15,10 +15,10 @@ on:
       add_kpm_build:
         type: boolean
         default: false
-        description: Add KPM build (CONFIG_DEBUG_KERNEL must disabled)
+        description: Add KPM build
       enable_config_debug_kernel:
         type: boolean
-        default: false
+        default: true
         description: Enable CONFIG_DEBUG_KERNEL
       integrate_wireguard:
         type: boolean
@@ -151,6 +151,12 @@ jobs:
 
           # remove built-in custom rom hiding (might will readd in future)
           patch -p1 < ../patches/96_unhide_stuff.patch
+
+          # Complete path_umount backport
+          patch -p1 < ../patches/complete_path_umount_backport.patch
+
+          # Fix Bmax121 KernelPatch support (APatch)
+          patch -p1 < ../patches/fix_bmax121_kernelpatch.patch
 
       - name: add KernelSU hook and enable SukiSU
         run: |

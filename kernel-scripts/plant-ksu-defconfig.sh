@@ -21,7 +21,7 @@ declare -a add_feature_flags=(
     "CONFIG_KSU_MANUAL_HOOK"
 
     # "CONFIG_KSU_MANUAL_SU"
-    # "CONFIG_KSU_MULTI_MANAGER_SUPPORT" # removed
+    "CONFIG_KSU_MULTI_MANAGER_SUPPORT"
 )
 
 # add features logic
