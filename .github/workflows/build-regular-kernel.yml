@@ -65,7 +65,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           repository: 'WuXing90/hyperOS_kernel_erofs' # use bka branch
-          ref: 'bka'
+          ref: 'KSU'
           path: ${{ env.KERNEL_FOLDER }}
 
       - name: save kernel commit # not using HEAD since we are not fetching latest one
@@ -226,4 +226,5 @@ jobs:
           body: |
             Power Kernel commit: `${{ env.KERNEL_COMMIT }}`
             ${{ github.event.inputs.release_message }}
+
 
