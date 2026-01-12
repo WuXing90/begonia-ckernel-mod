@@ -69,8 +69,8 @@ jobs:
       - name: checkout kernel repo
         uses: actions/checkout@v5
         with:
-          repository: 'WuXing90/kernel_xiaomi_mt6785' # use bka branch
-          ref: 'erofs'
+          repository: 'WuXing90/hyperOS_kernel_erofs' # use bka branch
+          ref: 'bka'
           path: ${{ env.KERNEL_FOLDER }}
 
       - name: save kernel commit # not using HEAD since we are not fetching latest one
