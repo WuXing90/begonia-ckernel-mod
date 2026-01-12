@@ -64,7 +64,7 @@ jobs:
       - name: checkout kernel repo
         uses: actions/checkout@v5
         with:
-          repository: 'F640/kernel_xiaomi_mt6785_begonia_power_kernel' # use bka branch
+          repository: 'WuXing90/hyperOS_kernel_erofs' # use bka branch
           ref: 'bka'
           path: ${{ env.KERNEL_FOLDER }}
 
@@ -226,3 +226,4 @@ jobs:
           body: |
             Power Kernel commit: `${{ env.KERNEL_COMMIT }}`
             ${{ github.event.inputs.release_message }}
+
