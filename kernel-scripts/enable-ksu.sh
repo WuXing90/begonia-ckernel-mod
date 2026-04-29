@@ -13,7 +13,7 @@ sed -ri 's/^(CONFIG_KSU_KPROBES_HOOK=.*|# CONFIG_KSU_KPROBES_HOOK is not set)/# 
 sed -ri 's/^(CONFIG_KSU_MULTI_MANAGER_SUPPORT=.*|# CONFIG_KSU_MULTI_MANAGER_SUPPORT is not set)/CONFIG_KSU_MULTI_MANAGER_SUPPORT=y/' $DEFCONFIG
 
 # only for sukisu
-if [ "$1" == 'sukisusfs200' ]; then
+if [ "$1" = 'sukisusfs200' ]; then
    sed -ri 's/^(CONFIG_KSU_NONE_HOOK=.*|# CONFIG_KSU_NONE_HOOK is not set)/CONFIG_KSU_NONE_HOOK=y/' $DEFCONFIG
 else
    sed -ri 's/^(CONFIG_KSU_MANUAL_HOOK=.*|# CONFIG_KSU_MANUAL_HOOK is not set)/CONFIG_KSU_MANUAL_HOOK=y/' $DEFCONFIG

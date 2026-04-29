@@ -1,0 +1,12 @@
+diff --git a/Makefile b/Makefile
+index 9c87c5892..fea23b1a0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -281,6 +281,7 @@ include scripts/Kbuild.include
+ 
+ # Read KERNELRELEASE from include/config/kernel.release (if it exists)
+ KERNELRELEASE = $(shell cat include/config/kernel.release 2> /dev/null)
++override KERNELRELEASE := 4.14.336-g7c1895PooWeR # final version according to Android Common Kernel, stock version: 4.14.186-g7c18952d3c68
+ KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
+ export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
+ 

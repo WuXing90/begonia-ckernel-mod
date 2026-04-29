@@ -12,6 +12,7 @@ declare -a enable_feature_flags=(
     "CONFIG_KALLSYMS" 
     "CONFIG_KALLSYMS_ALL"
     "CONFIG_KALLSYMS_BASE_RELATIVE"
+
     # general tracing option for kprobes and tracepoint
     "CONFIG_TRACING"
     # If your kernel have problem with kprobes
@@ -24,15 +25,18 @@ declare -a enable_feature_flags=(
     # CONFIG_HAVE_SYSCALL_TRACEPOINTS # reason to not overide this same as other CONFIG_HAVE_*
     "CONFIG_FTRACE"
     "CONFIG_TRACEPOINTS"
+
     # mountify requirements if you need it
     "CONFIG_OVERLAY_FS"
     "CONFIG_TMPFS_XATTR"
     # this might be helpful one day
     "CONFIG_TMPFS_POSIX_ACL"
+
     # lkm support
     "CONFIG_MODULES"
     "CONFIG_MODULE_UNLOAD"
     "CONFIG_MODVERSIONS"
+
     # ARM virtualization
     "CONFIG_ARM64_VHE"
 )
@@ -84,5 +88,12 @@ do
    echo "# $CONFIG is not set" >> $STOCK_DEFCONFIG
 done
 
-# edit kernel suffix for evade play integrity detection
-sed -ri 's/^(CONFIG_LOCALVERSION=.*|# CONFIG_LOCALVERSION is not set)/CONFIG_LOCALVERSION="-PooWeR"/' $DEV_DEFCONFIG
+
+# increase dmesg buffer size
+sed -ri 's/^(CONFIG_LOG_BUF_SHIFT=.*|# CONFIG_LOG_BUF_SHIFT is not set)/CONFIG_LOG_BUF_SHIFT=17/' $DEV_DEFCONFIG
+sed -ri 's/^(CONFIG_LOG_BUF_SHIFT=.*|# CONFIG_LOG_BUF_SHIFT is not set)/CONFIG_LOG_BUF_SHIFT=17/' $STOCK_DEFCONFIG
+sed -ri 's/^(CONFIG_LOG_CPU_MAX_BUF_SHIFT=.*|# CONFIG_LOG_CPU_MAX_BUF_SHIFT is not set)/CONFIG_LOG_CPU_MAX_BUF_SHIFT=17/' $DEV_DEFCONFIG
+sed -ri 's/^(CONFIG_LOG_CPU_MAX_BUF_SHIFT=.*|# CONFIG_LOG_CPU_MAX_BUF_SHIFT is not set)/CONFIG_LOG_CPU_MAX_BUF_SHIFT=17/' $STOCK_DEFCONFIG
+
+# edit kernel suffix for evade play integrity detection (Disabled as kernel version now harcoded through kernel makefile for better evasion)
+# sed -ri 's/^(CONFIG_LOCALVERSION=.*|# CONFIG_LOCALVERSION is not set)/CONFIG_LOCALVERSION="-PooWeR"/' $DEV_DEFCONFIG

@@ -10,11 +10,13 @@ AK3_DIR="$KERNEL_PATH/Anykernel"
 DEFCONFIG="${2:-begonia_user_defconfig}"
 BUILD_USER=$(whoami)
 BUILD_HOST=$(cat /etc/hostname)
+FAKE_BUILD_TIME="${KERNEL_BUILD_TIME:-$(date)}"
 TOOLCHAIN_DIR="$KERNEL_PATH/toolchain"
 OUT_DIR="$KERNEL_PATH/out"
 
 export KBUILD_BUILD_USER="$BUILD_USER"
 export KBUILD_BUILD_HOST="$BUILD_HOST"
+export KBUILD_BUILD_TIMESTAMP="$FAKE_BUILD_TIME"
 export ARCH=arm64
 export PATH="$TOOLCHAIN_DIR/bin:$PATH"
 export USE_HOST_LEX=yes
@@ -37,6 +39,7 @@ build_kernel() {
     echo -e "environment info:"
     echo -e "Build user: $KBUILD_BUILD_USER"
     echo -e "Build host: $KBUILD_BUILD_HOST"
+    echo -e "Build date (embed to kernel): $KBUILD_BUILD_TIMESTAMP"
     echo -e "------------------------"
     mkdir -p "$OUT_DIR"
     make O="$OUT_DIR" CROSS_COMPILE=aarch64-linux-gnu- LLVM=1 "$DEFCONFIG"

@@ -21,6 +21,10 @@ on:
         type: boolean
         default: true
         description: Enable Wireguard
+      kernel_build_time:
+        type: string
+        default: 'Thu Jan 11 12:00:00 AM UTC 2024'
+        description: Set kernel Build Time
       generate_release:
         type: choice
         description: Generate release? You will need to enable 2FA after you create release
@@ -54,6 +58,7 @@ jobs:
         run: |
           echo "ENABLE_CONFIG_DEBUG_KERNEL=${{ github.event.inputs.enable_config_debug_kernel }}" >> $GITHUB_ENV
           echo "INTEGRATE_WIREGUARD=${{ github.event.inputs.integrate_wireguard }}" >> $GITHUB_ENV
+          echo "KERNEL_BUILD_TIME=${{ github.event.inputs.kernel_build_time }}" >> $GITHUB_ENV
 
       - name: Add date
         run: echo "TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
@@ -124,15 +129,27 @@ jobs:
           ../kernel-scripts/set-features.sh
 
           # add KVM support
+          echo "Adding KVM support..."
           ../kernel-scripts/enable-kvm-vfio.sh
 
           # remove built-in custom rom hiding (might will readd in future)
+          echo "Disabling Custom ROM hiding codes..."
           patch -p1 < ../patches/96_unhide_stuff.patch
 
+          # remove display FPS integration (what's the reason? detection?)
+          echo "Reverting primary display FPS integration..."
+          patch -p1 < ../patches/revert_pri_disp_fps.patch
+
+          # hardcode kernel version (some sensitive apps detects OpenELA kernels now)
+          echo "Harcoding kernel version..."
+          patch -p1 < ../patches/hardcode_uname.patch
+
           # Complete path_umount backport
+          echo "completing path_umount backport..."
           patch -p1 < ../patches/complete_path_umount_backport.patch
 
           # Fix Bmax121 KernelPatch support (APatch)
+          echo "Fixing KernelPatch support..."
           patch -p1 < ../patches/fix_bmax121_kernelpatch.patch
 
       - name: Start building
